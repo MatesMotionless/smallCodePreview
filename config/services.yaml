@@ -1,0 +1,44 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
+parameters:
+    app.llg_api_key: "VARIABLE FROM ENVIROMENT SETTINGS FILE"
+    locale: 'cs'
+    app_locales: cs|en|fr|de
+    algolia.application_id : "VARIABLE FROM ENVIROMENT SETTINGS FILE"
+    algolia.search_api_key : "VARIABLE FROM ENVIROMENT SETTINGS FILE"
+    algolia.write_api_key : "VARIABLE FROM ENVIROMENT SETTINGS FILE"
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+    Gedmo\Translatable\TranslatableListener:
+        tags:
+            -
+                name: 'stof_doctrine_extensions.listener.translatable'
+                public: true
+                priority: 500
+                connection: 'default'
+    product_normalizer:
+        class: App\Serializer\Normalizer\ProductNormalizer
+        tags: [serializer.normalizer]
+        public: false
+    product_variant_normalizer:
+        class: App\Serializer\Normalizer\ProductVariantNormalizer
+        tags: [ serializer.normalizer ]
+        public: false
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones

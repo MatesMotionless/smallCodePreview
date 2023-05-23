@@ -1,0 +1,7 @@
+# All available configuration can be found here:
+# https://www.algolia.com/doc/api-client/symfony/configuration/
+algolia_search:
+    batchSize: 450
+    indices:
+      - name: algolia_product
+        class: App\Entity\AlgoliaProduct
